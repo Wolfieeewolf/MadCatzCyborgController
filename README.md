@@ -10,12 +10,7 @@ The MadCatz Cyborg Gaming Light is a customizable RGB lighting device that offer
 
 This driver allows OpenRGB to control these lights, providing a modern interface for controlling this hardware on current systems.
 
-## Features
-- Supports full RGB color control
-- Enables positioning control (Center, North, Northeast, East, Southeast, South, Southwest, West, Northwest)
-- Supports vertical position adjustment (Low, Middle, High)
-- Allows intensity/brightness adjustment
-- Uses standard HID drivers for communication
+Standard HID drivers for communication
 
 ## Implementation Details
 - Device is identified using VID: 0x06A3, PID: 0x0DC5
