@@ -1,6 +1,10 @@
 /*---------------------------------------------------------*\
-| MadCatz Cyborg Gaming Light Controller driver for OpenRGB    |
-|                                                              |
+| MadCatzCyborgController.cpp                                 |
+|                                                           |
+|   Driver for MadCatz Cyborg Gaming Light                  |
+|                                                           |
+|   This file is part of the OpenRGB project                |
+|   SPDX-License-Identifier: GPL-2.0-only                   |
 \*---------------------------------------------------------*/
 
 #include "MadCatzCyborgController.h"
@@ -52,6 +56,16 @@ std::string MadCatzCyborgController::GetSerialString()
     return(return_string);
 }
 
+/*---------------------------------------------------------*\
+| Function: Initialize                                       |
+|                                                           |
+| Description: Initializes the device, making it ready for  |
+|              color commands and turning off all lights    |
+|                                                           |
+| Parameters: None                                          |
+|                                                           |
+| Returns: None                                             |
+\*---------------------------------------------------------*/
 void MadCatzCyborgController::Initialize()
 {
     // Initialize the device
@@ -70,37 +84,92 @@ void MadCatzCyborgController::Initialize()
     SetLEDColor(0, 0, 0);
 }
 
+/*---------------------------------------------------------*\
+| Function: UsbIdleRequest                                   |
+|                                                           |
+| Description: Sends an idle request to the device          |
+|              bmRequestType=0x21, bRequest=0x0a           |
+|              wValue=0x00, wIndex=0                        |
+|                                                           |
+| Parameters: None                                          |
+|                                                           |
+| Returns: None                                             |
+\*---------------------------------------------------------*/
 void MadCatzCyborgController::UsbIdleRequest()
 {
-    // From pycyborg: bmRequestType=0x21, bRequest=0x0a, wValue=0x00, wIndex=0
     unsigned char usb_buf[1] = { 0x00 };
     hid_send_feature_report(dev, usb_buf, 1);
 }
 
+/*---------------------------------------------------------*\
+| Function: UsbResetRequest                                  |
+|                                                           |
+| Description: Sends a reset request to the device          |
+|              bmRequestType=0x21, bRequest=0x09           |
+|              wValue=0x03a7, wIndex=0                      |
+|                                                           |
+| Parameters: None                                          |
+|                                                           |
+| Returns: None                                             |
+\*---------------------------------------------------------*/
 void MadCatzCyborgController::UsbResetRequest()
 {
-    // From pycyborg: bmRequestType=0x21, bRequest=0x09, wValue=0x03a7, wIndex=0
     unsigned char usb_buf[2] = { CMD_RESET, 0x00 };
     
     hid_send_feature_report(dev, usb_buf, 2);
 }
 
+/*---------------------------------------------------------*\
+| Function: UsbGetReport                                     |
+|                                                           |
+| Description: Gets a feature report from the device        |
+|              bmRequestType=0xa1, bRequest=0x01           |
+|              wValue=0x03b0, wIndex=0                      |
+|                                                           |
+| Parameters: None                                          |
+|                                                           |
+| Returns: None                                             |
+\*---------------------------------------------------------*/
 void MadCatzCyborgController::UsbGetReport()
 {
-    // From pycyborg: bmRequestType=0xa1, bRequest=0x01, wValue=0x03b0, wIndex=0
     unsigned char usb_buf[9] = {0};
     
     hid_get_feature_report(dev, usb_buf, 9);
 }
 
+/*---------------------------------------------------------*\
+| Function: SetLEDColor                                      |
+|                                                           |
+| Description: Sets the LED color                           |
+|              bmRequestType=0x21, bRequest=0x09           |
+|              wValue=0x03a2, wIndex=0                      |
+|                                                           |
+| Parameters:                                               |
+|   red   - Red color component (0-255)                     |
+|   green - Green color component (0-255)                   |
+|   blue  - Blue color component (0-255)                    |
+|                                                           |
+| Returns: None                                             |
+\*---------------------------------------------------------*/
 void MadCatzCyborgController::SetLEDColor(unsigned char red, unsigned char green, unsigned char blue)
 {
-    // From pycyborg: bmRequestType=0x21, bRequest=0x09, wValue=0x03a2, wIndex=0
     unsigned char usb_buf[9] = { CMD_COLOR, 0x00, red, green, blue, 0x00, 0x00, 0x00, 0x00 };
     
     hid_send_feature_report(dev, usb_buf, 9);
 }
 
+/*---------------------------------------------------------*\
+| Function: SetIntensity                                     |
+|                                                           |
+| Description: Sets the brightness/intensity of the light   |
+|              bmRequestType=0x21, bRequest=0x09           |
+|              wValue=0x03a6, wIndex=0                      |
+|                                                           |
+| Parameters:                                               |
+|   intensity - Brightness level (0-100)                    |
+|                                                           |
+| Returns: None                                             |
+\*---------------------------------------------------------*/
 void MadCatzCyborgController::SetIntensity(unsigned char intensity)
 {
     // Ensure intensity is in range 0-100
@@ -109,23 +178,45 @@ void MadCatzCyborgController::SetIntensity(unsigned char intensity)
         intensity = 100;
     }
     
-    // From pycyborg: bmRequestType=0x21, bRequest=0x09, wValue=0x03a6, wIndex=0
     unsigned char usb_buf[3] = { CMD_INTENSITY, 0x00, intensity };
     
     hid_send_feature_report(dev, usb_buf, 3);
 }
 
+/*---------------------------------------------------------*\
+| Function: SetPosition                                      |
+|                                                           |
+| Description: Sets the position of the light               |
+|              bmRequestType=0x21, bRequest=0x09           |
+|              wValue=0x03a4, wIndex=0                      |
+|                                                           |
+| Parameters:                                               |
+|   position_byte1 - First byte of position data            |
+|   position_byte2 - Second byte of position data           |
+|                                                           |
+| Returns: None                                             |
+\*---------------------------------------------------------*/
 void MadCatzCyborgController::SetPosition(unsigned char position_byte1, unsigned char position_byte2)
 {
-    // From pycyborg: bmRequestType=0x21, bRequest=0x09, wValue=0x03a4, wIndex=0
     unsigned char usb_buf[4] = { CMD_POSITION, 0x00, position_byte1, position_byte2 };
     
     hid_send_feature_report(dev, usb_buf, 4);
 }
 
+/*---------------------------------------------------------*\
+| Function: SetVerticalPosition                             |
+|                                                           |
+| Description: Sets the vertical position of the light      |
+|              bmRequestType=0x21, bRequest=0x09           |
+|              wValue=0x03a5, wIndex=0                      |
+|                                                           |
+| Parameters:                                               |
+|   v_pos - Vertical position (use VerticalPosition enum)   |
+|                                                           |
+| Returns: None                                             |
+\*---------------------------------------------------------*/
 void MadCatzCyborgController::SetVerticalPosition(unsigned char v_pos)
 {
-    // From pycyborg: bmRequestType=0x21, bRequest=0x09, wValue=0x03a5, wIndex=0
     unsigned char usb_buf[3] = { CMD_V_POS, 0x00, v_pos };
     
     hid_send_feature_report(dev, usb_buf, 3);

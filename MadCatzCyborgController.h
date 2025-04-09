@@ -1,6 +1,20 @@
 /*---------------------------------------------------------*\
-| MadCatz Cyborg Gaming Light Controller driver for OpenRGB    |
-|                                                              |
+| MadCatzCyborgController.h                                   |
+|                                                           |
+|   Driver for MadCatz Cyborg Gaming Light                  |
+|                                                           |
+|   This file is part of the OpenRGB project                |
+|   SPDX-License-Identifier: GPL-2.0-only                   |
+|                                                           |
+|   Protocol information:                                   |
+|   The device uses a simple HID feature report protocol    |
+|   Each command begins with a command byte:                |
+|   0xA1 - Enable device                                   |
+|   0xA2 - Set light color (RGB)                           |
+|   0xA4 - Set light position                              |
+|   0xA5 - Set vertical position                           |
+|   0xA6 - Set light intensity (brightness)                |
+|   0xA7 - Reset device                                    |
 \*---------------------------------------------------------*/
 
 #pragma once

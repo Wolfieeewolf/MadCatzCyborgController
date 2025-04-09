@@ -1,6 +1,10 @@
 /*---------------------------------------------------------*\
-| MadCatz Cyborg Gaming Light Controller detector for OpenRGB |
-|                                                              |
+| MadCatzCyborgControllerDetect.cpp                          |
+|                                                           |
+|   Detector for MadCatz Cyborg Gaming Light                |
+|                                                           |
+|   This file is part of the OpenRGB project                |
+|   SPDX-License-Identifier: GPL-2.0-only                   |
 \*---------------------------------------------------------*/
 
 #include "Detector.h"
@@ -10,7 +14,9 @@
 #include "ResourceManager.h"
 #include <hidapi.h>
 
-// From pycyborg: VENDOR=0x06a3, PRODUCT=0x0dc5
+/*-----------------------------------------------------*\
+| MadCatz Cyborg VID/PID                               |
+\*-----------------------------------------------------*/
 #define MADCATZ_VID        0x06A3
 #define MADCATZ_CYBORG_PID 0x0DC5
 

@@ -1,3 +1,12 @@
+/*---------------------------------------------------------*\
+| RGBController_MadCatzCyborg.cpp                           |
+|                                                           |
+|   RGB Controller for MadCatz Cyborg Gaming Light          |
+|                                                           |
+|   This file is part of the OpenRGB project                |
+|   SPDX-License-Identifier: GPL-2.0-only                   |
+\*---------------------------------------------------------*/
+
 #include "RGBController_MadCatzCyborg.h"
 
 /**------------------------------------------------------------------*\
